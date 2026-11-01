@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { getSessionUser } from "@/lib/auth";
-import { CATEGORIES, CONDITIONS } from "@/lib/catalog";
+import { CATEGORIES, CONDITIONS, LIMITS } from "@/lib/catalog";
 
 const MAX_IMAGE_LENGTH = 3_000_000; // ~2 MB file as a base64 data URL
 
@@ -50,13 +50,20 @@ export async function POST(req: Request) {
   const title = str(body?.title);
   const brand = str(body?.brand);
   const description = str(body?.description);
-  const size = str(body?.size).slice(0, 20);
+  const size = str(body?.size);
   const category = str(body?.category);
   const condition = str(body?.condition);
   const image = typeof body?.image === "string" ? body.image : "";
   const price = Number(body?.price);
   if (!title || !description || !image || !Number.isFinite(price) || price <= 0) {
     return NextResponse.json({ error: "Missing or invalid fields" }, { status: 400 });
+  }
+  if (price > LIMITS.maxPrice) {
+    return NextResponse.json({ error: `Price can be at most €${LIMITS.maxPrice}` }, { status: 400 });
+  }
+  const tooLong = (["title", "brand", "size", "description"] as const).find((f) => ({ title, brand, size, description })[f].length > LIMITS[f]);
+  if (tooLong) {
+    return NextResponse.json({ error: `The ${tooLong} can be at most ${LIMITS[tooLong]} characters` }, { status: 400 });
   }
   if (!(CATEGORIES as readonly string[]).includes(category) || !(CONDITIONS as readonly string[]).includes(condition)) {
     return NextResponse.json({ error: "Please choose a category and condition" }, { status: 400 });

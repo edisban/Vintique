@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
-import { CATEGORIES, CONDITIONS, CONDITION_HINTS } from "@/lib/catalog";
+import { CATEGORIES, CONDITIONS, CONDITION_HINTS, LIMITS } from "@/lib/catalog";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
@@ -148,10 +148,10 @@ export default function AddProductDialog({ open, onClose, onCreated }: Props) {
                 </Box>
               </Grid>
               <Grid size={{ xs: 12, md: 7 }} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <TextField label="Title" placeholder="e.g. 1970s suede jacket" value={form.title} onChange={set("title")} required fullWidth />
+                <TextField label="Title" placeholder="e.g. 1970s suede jacket" value={form.title} onChange={set("title")} required fullWidth slotProps={{ htmlInput: { maxLength: LIMITS.title } }} />
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-                  <TextField label="Brand" placeholder="Or “Unbranded”" value={form.brand} onChange={set("brand")} fullWidth />
-                  <TextField label="Size" placeholder="e.g. M, 38, One size" value={form.size} onChange={set("size")} fullWidth />
+                  <TextField label="Brand" placeholder="Or “Unbranded”" value={form.brand} onChange={set("brand")} fullWidth slotProps={{ htmlInput: { maxLength: LIMITS.brand } }} />
+                  <TextField label="Size" placeholder="e.g. M, 38, One size" value={form.size} onChange={set("size")} fullWidth slotProps={{ htmlInput: { maxLength: LIMITS.size } }} />
                 </Stack>
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                   <TextField select label="Category" value={form.category} onChange={set("category")} required fullWidth>
@@ -185,7 +185,7 @@ export default function AddProductDialog({ open, onClose, onCreated }: Props) {
                   required
                   fullWidth
                   slotProps={{
-                    htmlInput: { min: 0.5, step: "0.5" },
+                    htmlInput: { min: 0.5, max: LIMITS.maxPrice, step: "0.5" },
                     input: { startAdornment: <InputAdornment position="start">€</InputAdornment> },
                   }}
                 />
@@ -198,6 +198,8 @@ export default function AddProductDialog({ open, onClose, onCreated }: Props) {
                   required
                   fullWidth
                   placeholder="Tell buyers about it: era, measurements, materials, how it fits and any signs of wear."
+                  helperText={`${form.description.length}/${LIMITS.description}`}
+                  slotProps={{ htmlInput: { maxLength: LIMITS.description } }}
                 />
                 {error && <Alert severity="error">{error}</Alert>}
                 <Button type="submit" variant="contained" size="large" disabled={busy} sx={{ alignSelf: "flex-start" }}>

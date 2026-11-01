@@ -18,3 +18,6 @@ export const ORDER_STATUS_LABELS: Record<string, string> = {
   SHIPPED: "Shipped",
   COMPLETED: "Completed",
 };
+
+// Maximum lengths for listing fields, shared by the API and the sell form.
+export const LIMITS = { title: 80, brand: 50, size: 20, description: 2000, maxPrice: 100000 } as const;

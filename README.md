@@ -56,14 +56,14 @@ Built with Next.js 16 (App Router), Material UI, Prisma, PostgreSQL and Better A
    ```
 
 - App: http://localhost:3000
-- Postgres: localhost:5432 (user `vintique`, password `vintique`)
+- Postgres: localhost:5433 (user `vintique`, password `vintique`). Port 5433 avoids clashing with a locally installed PostgreSQL
 - Database migrations run automatically when the app container starts.
 
 ## Run locally (without the app container)
 
 Start only the database with `docker-compose up -d db`, then create `vintique-next/.env`:
 ```
-DATABASE_URL=postgresql://vintique:vintique@localhost:5432/vintique
+DATABASE_URL=postgresql://vintique:vintique@localhost:5433/vintique
 BETTER_AUTH_SECRET=<generate with: openssl rand -base64 32>
 BETTER_AUTH_URL=http://localhost:3000
 ADMIN_EMAIL=admin@vintique.com
@@ -83,7 +83,9 @@ Stop the `app` container first if it is running, since both use port 3000.
 | `npm run dev` | Development server with hot reload |
 | `npm run build` / `npm start` | Production build and server |
 | `npm run lint` | ESLint |
-| `npx tsc --noEmit` | Type check |
+| `npm run typecheck` | TypeScript type check |
+| `npm test` | Run the test suite (needs the `db` container running) |
+| `npm run test:watch` | Tests in watch mode |
 | `npx prisma migrate dev` | Apply migrations / create a new one after editing the schema |
 | `npx prisma studio` | Browse the database in the browser |
 
@@ -112,10 +114,12 @@ All endpoints are under `/api`. Endpoints marked 🔒 need a signed-in session c
 
 ```
 vintique/
+├── .github/workflows/ci.yml    # CI (lint, types, tests, build) + CD (publish Docker image)
 ├── docker-compose.yml          # Postgres + app
 ├── .env                        # secrets for docker-compose (git-ignored)
 └── vintique-next/
-    ├── Dockerfile              # multi-stage build; runs migrations on start
+    ├── Dockerfile              # multi-stage, slim, non-root; runs migrations on start
+    ├── tests/                  # Vitest integration tests
     ├── prisma/
     │   ├── schema.prisma       # data model
     │   └── migrations/         # SQL migrations, applied in order
@@ -130,6 +134,31 @@ vintique/
         ├── lib/                # auth, Prisma client, types, constants, helpers
         └── theme.ts            # MUI theme, palette and glass style
 ```
+
+## Testing
+
+`npm test` runs 30 integration tests with [Vitest](https://vitest.dev). They call the real API route handlers against a real PostgreSQL database, so they check the actual queries, transactions and permission rules. Only the session lookup is replaced, so each test can choose who is signed in.
+
+- The tests use a separate `vintique_test` database (on the `db` container, port 5433), recreated from the migrations before each run, and refuse to run against a database whose name doesn't contain "test". Override with `TEST_DATABASE_URL`.
+- Covered:
+  - listing validation, browsing filters and pagination
+  - ownership and admin rules
+  - checkout, including two buyers purchasing the same item at the same moment
+  - the order status flow
+  - messaging privacy and unread counts
+
+## CI/CD
+
+GitHub Actions (`.github/workflows/ci.yml`):
+
+- **CI:** on every push and pull request, runs lint, type check, the tests (against a PostgreSQL service container) and a production build.
+- **CD:** on pushes to `master`, once CI passes, builds the production Docker image and publishes it to GitHub Container Registry as `ghcr.io/edisban/vintique`, tagged `latest` and with the commit SHA.
+
+Run the published image with your own database and secrets:
+```bash
+docker run -p 3000:3000   -e DATABASE_URL=postgresql://user:password@host:5432/vintique   -e BETTER_AUTH_SECRET=<secret> -e BETTER_AUTH_URL=http://localhost:3000   ghcr.io/edisban/vintique:latest
+```
+The container applies database migrations on start.
 
 ## Not built yet
 
