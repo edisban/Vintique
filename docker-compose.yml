@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   db:
     image: postgres:16
@@ -7,17 +6,27 @@ services:
       POSTGRES_PASSWORD: vintique
       POSTGRES_DB: vintique
     ports:
-      - "5432:5432"
+      # 5433 on the host avoids clashing with a locally installed PostgreSQL
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vintique -d vintique"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
   app:
     build: ./vintique-next
     ports:
       - "3000:3000"
     environment:
       DATABASE_URL: postgresql://vintique:vintique@db:5432/vintique
-      JWT_SECRET: dev-secret-change-me
+      # Set these in the root .env file (see README)
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Set BETTER_AUTH_SECRET in .env}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@vintique.com}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 volumes:
   pgdata:

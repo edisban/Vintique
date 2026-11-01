@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# Files generated for AI coding assistants by next dev
+AGENTS.md
+CLAUDE.md

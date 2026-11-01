@@ -7,11 +7,163 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User, Session, Account and Verification are managed by Better Auth.
+// Passwords live on Account (providerId "credential"), hashed with scrypt.
+model User {
+  id            String         @id
+  name          String
+  email         String         @unique
+  emailVerified Boolean        @default(false)
+  image         String?
+  role          String         @default("USER")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  products      Product[]
+  purchases     Order[]        @relation("purchases")
+  sales         Order[]        @relation("sales")
+  buying        Conversation[] @relation("buyerConversations")
+  selling       Conversation[] @relation("sellerConversations")
+  messages      Message[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
 model Product {
   id          Int      @id @default(autoincrement())
   title       String
+  brand       String   @default("")
+  category    String   @default("Other")
+  size        String   @default("")
+  condition   String   @default("Good")
   price       Float
   description String
   image       String
+  status      String   @default("AVAILABLE") // AVAILABLE | SOLD
+  sellerId    String?
+  seller      User?    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
+
+  orderItems    OrderItem[]
+  conversations Conversation[]
+
+  @@index([sellerId])
+  @@index([status, createdAt])
+}
+
+// One order per seller per checkout. Payment is simulated (test mode), so orders start as PAID.
+model Order {
+  id             Int         @id @default(autoincrement())
+  buyerId        String
+  buyer          User        @relation("purchases", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId       String
+  seller         User        @relation("sales", fields: [sellerId], references: [id], onDelete: Cascade)
+  status         String      @default("PAID") // PAID -> SHIPPED -> COMPLETED
+  itemsTotal     Float
+  shipping       Float
+  total          Float
+  shipName       String
+  shipAddress    String
+  shipCity       String
+  shipPostalCode String
+  shipCountry    String
+  items          OrderItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([buyerId])
+  @@index([sellerId])
+}
+
+// Title and price are copied at purchase time so the order stays accurate if the listing changes.
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  title     String
+  price     Float
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+// A buyer's conversation with a seller about one listing.
+model Conversation {
+  id        Int       @id @default(autoincrement())
+  productId Int?
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  buyerId   String
+  buyer     User      @relation("buyerConversations", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId  String
+  seller    User      @relation("sellerConversations", fields: [sellerId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([productId, buyerId])
+  @@index([buyerId])
+  @@index([sellerId])
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body           String
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
 }
