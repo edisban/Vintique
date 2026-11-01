@@ -1,0 +1,5 @@
+.env
+.env.*
+
+# Personal notes (not for the repo)
+INTERVIEW_NOTES.md
