@@ -12,9 +12,9 @@ import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 
 const values = [
-  { icon: <AutoAwesomeOutlinedIcon />, title: "One of a kind", text: "Every listing is a single piece from someone's wardrobe, not mass-produced stock." },
+  { icon: <AutoAwesomeOutlinedIcon />, title: "One of a kind", text: "Every listing is a single piece from someone's wardrobe or home, not mass-produced stock." },
   { icon: <VerifiedOutlinedIcon />, title: "Honest listings", text: "Sellers describe size, condition and any signs of wear, and listings that break the rules are removed." },
-  { icon: <RecyclingIcon />, title: "Circular by design", text: "Buying pre-loved keeps good clothes in use and out of landfill. The greenest garment is one that already exists." },
+  { icon: <RecyclingIcon />, title: "Circular by design", text: "Buying pre-loved keeps good clothes and objects in use and out of landfill. The greenest thing is one that already exists." },
 ];
 
 export default function AboutPage() {
@@ -28,9 +28,10 @@ export default function AboutPage() {
           Fashion worth <Box component="span" sx={{ fontStyle: "italic", color: "secondary.main" }}>keeping</Box>
         </Typography>
         <Typography variant="h6" component="p" color="text.secondary" sx={{ fontWeight: 400, lineHeight: 1.7 }}>
-          Vintique is a community marketplace built on a simple belief: well-made clothes deserve more than one life. Members
-          list the vintage and pre-loved pieces they no longer wear, from a perfectly worn-in jacket to a silk scarf with decades
-          of stories, and other members give them a new home. Listing is free. No fast fashion, just pieces made to last.
+          Vintique is a community marketplace built on a simple belief: well-made things deserve more than one life. Members
+          list the vintage and pre-loved pieces they no longer need, from a perfectly worn-in jacket or a silk scarf with decades
+          of stories to a brass lamp or a set of old teacups, and other members give them a new home. Listing is free. No fast
+          fashion, just pieces made to last.
         </Typography>
       </Box>
       <Grid container spacing={3}>

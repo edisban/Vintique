@@ -33,9 +33,9 @@ import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 const PER_PAGE = 12;
 
 const steps = [
-  { icon: <PhotoCameraOutlinedIcon />, title: "Snap it", text: "Take a clear photo of something you no longer wear and describe it honestly." },
+  { icon: <PhotoCameraOutlinedIcon />, title: "Snap it", text: "Take a clear photo of something you no longer need and describe it honestly." },
   { icon: <SellOutlinedIcon />, title: "Price it", text: "Set your own price. Listing on Vintique is free." },
-  { icon: <FavoriteBorderIcon />, title: "Pass it on", text: "Buyers discover your piece, and it gets a second life in someone else's wardrobe." },
+  { icon: <FavoriteBorderIcon />, title: "Pass it on", text: "Buyers discover your piece, and it gets a second life in someone else's wardrobe or home." },
 ];
 
 // Only this part reads ?add=1, so the rest of the page can be prerendered as static HTML.
@@ -123,16 +123,16 @@ export default function HomeClient() {
         <Grid container spacing={{ xs: 5, md: 8 }} sx={{ alignItems: "center" }}>
           <Grid size={{ xs: 12, md: 7 }}>
             <Typography variant="overline" color="secondary">
-              The marketplace for vintage &amp; pre-loved fashion
+              The marketplace for vintage fashion &amp; objects
             </Typography>
             <Typography variant="h1" sx={{ fontSize: { xs: "2.75rem", sm: "3.75rem", md: "4.5rem" }, lineHeight: 1.05, mt: 1, mb: 3 }}>
-              Give your wardrobe
+              Give old treasures
               <Box component="span" sx={{ display: "block", fontStyle: "italic", color: "secondary.main" }}>
                 a second story.
               </Box>
             </Typography>
             <Typography variant="h6" component="p" color="text.secondary" sx={{ fontWeight: 400, maxWidth: 540, mb: 4 }}>
-              Buy one-of-a-kind pieces from people who loved them first, and sell the clothes you no longer wear. Listing is free.
+              Buy one-of-a-kind pieces from people who loved them first, and sell the clothes and things you no longer need. Listing is free.
             </Typography>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
               <Button href="#shop" variant="contained" size="large">
@@ -330,9 +330,9 @@ export default function HomeClient() {
         <Card sx={{ p: { xs: 4, md: 6 }, display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { md: "center" }, justifyContent: "space-between", gap: 3 }}>
           <Box>
             <Typography variant="h4" sx={{ mb: 1 }}>
-              Clothes you don&apos;t wear? Someone&apos;s looking for them.
+              Things you don&apos;t use? Someone&apos;s looking for them.
             </Typography>
-            <Typography color="text.secondary">List a piece in a couple of minutes. It&apos;s free, and it keeps good clothes in use.</Typography>
+            <Typography color="text.secondary">List a piece in a couple of minutes. It&apos;s free, and it keeps good things in use.</Typography>
           </Box>
           <Button component={Link} href="/?add=1" scroll={false} variant="contained" size="large" sx={{ flexShrink: 0 }}>
             Sell a piece

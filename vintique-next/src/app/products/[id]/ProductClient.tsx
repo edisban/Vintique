@@ -34,7 +34,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutlined";
 const tips = [
   { icon: <StraightenIcon />, text: "Check the size, measurements and condition in the description before you buy." },
   { icon: <FlagOutlinedIcon />, text: "Something not right with this listing? Contact us and we'll review it." },
-  { icon: <RecyclingIcon />, text: "Buying pre-loved keeps good clothes in use and out of landfill." },
+  { icon: <RecyclingIcon />, text: "Buying pre-loved keeps good clothes and objects in use and out of landfill." },
 ];
 
 export default function ProductClient() {
