@@ -97,7 +97,7 @@ export default function ListingsPage() {
             {filter === "SOLD" ? "No sales yet" : "Nothing listed yet"}
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 3 }}>
-            {filter === "SOLD" ? "When a piece finds a buyer, mark it as sold and it will show up here." : "Got something you no longer wear? List it in a couple of minutes."}
+            {filter === "SOLD" ? "When a piece finds a buyer, mark it as sold and it will show up here." : "Got something you no longer need? List it in a couple of minutes."}
           </Typography>
           {filter !== "SOLD" && (
             <Button component={Link} href="/?add=1" variant="contained">

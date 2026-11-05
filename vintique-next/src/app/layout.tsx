@@ -16,8 +16,8 @@ const serif = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Vintique | Buy & Sell Vintage and Pre-loved Fashion",
-  description: "The community marketplace for vintage and pre-loved fashion. Buy one-of-a-kind pieces and sell the clothes you no longer wear. Listing is free.",
+  title: "Vintique | Buy & Sell Vintage Fashion and Objects",
+  description: "The community marketplace for vintage and pre-loved fashion and objects. Buy one-of-a-kind pieces and sell the clothes and things you no longer need. Listing is free.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

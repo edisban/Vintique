@@ -71,7 +71,7 @@ function Footer() {
               VINTIQUE
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 340 }}>
-              The community marketplace for vintage and pre-loved fashion. Every listing is one of a kind, sold by someone who loved it first.
+              The community marketplace for vintage and pre-loved fashion and objects. Every listing is one of a kind, sold by someone who loved it first.
             </Typography>
           </Grid>
           {footerLinks.map((col) => (
@@ -104,7 +104,7 @@ export default function Shell({ children }: { children: ReactNode }) {
       <Backdrop />
       <Box sx={{ bgcolor: "primary.main", color: "primary.contrastText", textAlign: "center", py: 0.75, px: 2 }}>
         <Typography variant="caption" sx={{ letterSpacing: "0.12em", fontWeight: 500 }}>
-          Buy and sell vintage &amp; pre-loved fashion · Listing is free
+          Buy and sell vintage fashion &amp; objects · Listing is free
         </Typography>
       </Box>
       <Header />

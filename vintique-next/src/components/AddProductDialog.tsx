@@ -88,7 +88,7 @@ export default function AddProductDialog({ open, onClose, onCreated }: Props) {
         {!session ? (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "flex-start" }}>
             <Typography color="text.secondary">
-              Listing is free. Create an account or sign in to start selling the pieces you no longer wear.
+              Listing is free. Create an account or sign in to start selling the pieces you no longer need.
             </Typography>
             <Stack direction="row" spacing={1.5}>
               <Button component={Link} href="/register" variant="contained">

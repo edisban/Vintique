@@ -1,6 +1,6 @@
 # Vintique
 
-A community marketplace for buying and selling vintage & pre-loved fashion. Members list the clothes they no longer wear; other members browse, chat with sellers and buy. Every listing is a single, one-of-a-kind item.
+A community marketplace for buying and selling vintage & pre-loved fashion and objects. Members list the clothes and things they no longer need, from jackets and scarves to lamps and teacups; other members browse, chat with sellers and buy. Every listing is a single, one-of-a-kind item.
 
 Built with Next.js 16 (App Router), Material UI, Prisma, PostgreSQL and Better Auth, and runs with Docker.
 
